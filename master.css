@@ -6,13 +6,11 @@
 
 #path3364 {
   stroke-dasharray: 400;
-  /*stroke-dashoffset: 1;*/
   animation: line 4s linear infinite;
   animation-direction: alternate;;
   stroke-width: 3;
   stroke: white;
 }
-
 
 @keyframes line {
   from {
