@@ -1,0 +1,36 @@
+body {
+  background: #272C34;
+  display: flex;
+  justify-content: center;
+}
+
+input:checked + label {
+  background: rgba(0, 0, 0, 0.1);
+
+  /*background: #272C34;*/
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+input {
+  display: none;
+  margin: 10px;
+}
+
+/*background: rgba(0, 0, 0, 0.1);*/
+label {
+  background: #272C34;
+
+  float:left;
+  box-sizing: border-box;
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-color: #272C34;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+#wrapper {
+  text-align: center;
+  width: 50%;
+}
