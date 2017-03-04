@@ -1,15 +1,24 @@
-.frame {
-    display: flex;
-    justify-content: center;
-    margin-top: 100px;
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85%;
 }
 
 #path3364 {
-  stroke-dasharray: 400;
+  stroke-dasharray: 500;
   animation: line 4s linear infinite;
-  animation-direction: alternate;;
+  stroke-width: 5;
+  stroke: #16A085;
+  stroke-linecap: round;
+}
+
+#path3366 {
+  stroke-dasharray: 500;
+  animation: line 8s linear infinite;
   stroke-width: 3;
-  stroke: white;
+  stroke: #16A085;
+  stroke-linecap: round;
 }
 
 @keyframes line {
@@ -24,4 +33,7 @@
 
 body {
   background: #272C34;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
 }
