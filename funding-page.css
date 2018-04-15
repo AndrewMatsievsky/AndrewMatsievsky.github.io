@@ -2,7 +2,7 @@
   /* display: flex; */
   /* justify-content: center; */
   margin: auto;
-  width: 50%;
+  width: 55%;
   /* width: 100%; */
 }
 
@@ -22,17 +22,6 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
-/*
-.carousell-block {
-  height: 350px;
-  display: flex;
-  flex-direction: column;
-} */
-
-/* .owl-carousel {
-  display: flex;
-  flex-wrap: wrap;
-} */
 
 .slide-title {
   font-size: 30px;
@@ -40,7 +29,6 @@
   margin-top: 10px;
   line-height: 60px;
   padding: 5px;
-  /* padding: 10px; */
 }
 
 h2 {
@@ -165,18 +153,29 @@ h2 {
 
 .funding-page--projects {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   margin-top: 35px;
+}
+
+@media only screen and (max-width: 768px) {
+  .funding-page--projects {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 35px;
+  }
 }
 
 .funding-page--element {
   width: 250px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   text-align: center;
-  margin-left: 35px;
+  /* margin-left: 35px; */
   margin-top: 35px;
 }
+
+
 
 .funding-page--element img {
   width: 150px;
