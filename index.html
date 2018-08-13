@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+  integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+  crossorigin=""/>
+  <link rel="stylesheet" href="stylesheet.css">
+  </head>
+  <body id="goFS">
+    <nav class="nav-bar">
+      <div class="nav-bar-link-container">
+        <a href="index.html#index" class="nav-bar-link" id="index">
+          <i class="far fa-map"></i>
+          Маршут
+        </a>
+      </div>
+      <div class="nav-bar-link-container">
+        <a href="history.html#history" class="nav-bar-link" id="history">
+          <i class="fas fa-monument"></i>
+          Історія
+        </a>
+      </div>
+      <div class="nav-bar-link-container">
+        <a href="contacts.html#contacts" class="nav-bar-link" id="contacts">
+          <i class="fas fa-phone"></i>
+          Контакти
+        </a>
+      </div>
+      <div class="nav-bar-link-container">
+        <a href="rules.html#rules" class="nav-bar-link" id="rules">
+          <i class="fal fa-exclamation-circle"></i>
+          Правила
+        </a>
+      </div>
+    </nav>
+    <div class="content">
+      <div id="mapid" class="map"></div>
+    </div>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q==" crossorigin=""></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript">
+      var mymap = L.map('mapid').setView([49.83826, 24.02324], 12);
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: 'mapbox.streets',
+          accessToken: 'pk.eyJ1IjoiYW1hdHNpZXZza2l5IiwiYSI6ImNqa2xrM29qejIyajUzcGt4OGM0NGppc3AifQ.q6BWVjq5FDI0PNk4WdH_oQ'
+      }).addTo(mymap);
+    </script>
+  </body>
+</html>
