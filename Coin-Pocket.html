@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f2e28" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Coin Pocket" />
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAABSUlEQVR42u3SMQ0AAAgEsdeBNCzgf8cAK1uTKrhcahpOkQBzYA7MgTkwB+bAHJgDc2AOMAfmwByYA3NgDsyBOTAH5gBzYA7MgTkwB+bAHJgDc2AOMAfmwByYA3NgDsyBOTAH5sAcYA7MgTkwB+bAHJgDc2AOzAHmwByYA3NgDsyBOTAH5sAcYA7MgTkwB+bAHJgDc2AOzIE5wByYA3NgDsyBOTAH5sAcmAPMgTkwB+bAHJgDc2AOzIE5wByYA3NgDsyBOTAH5sAcmANzgDkwB+bAHJgDc2AOzIE5MAeYA3NgDsyBOTAH5sAcmANzgDkwB+bAHJgDc2AOzIE5MAfmAHNgDsyBOTAH5sAcmANzYA4wB+bAHJgDc2AOzIE5MAfmAHNgDsyBOTAH5sAcmANzYA7MAebAHJgDc2AOzIE5MAfmwBxgDsyBOfiyQ7hF422Y0bcAAAAASUVORK5CYII=" />
+    <title>Coin Pocket</title>
+    <style>
+:root {
+  --bg-deep: #0c2420;
+  --bg-mid: #14352f;
+  --leaf: #2f8f72;
+  --leaf-bright: #4ec99a;
+  --coin: #e8c56a;
+  --coin-soft: #f3df9a;
+  --ink: #f4f0e6;
+  --ink-muted: rgba(244, 240, 230, 0.68);
+  --line: rgba(244, 240, 230, 0.14);
+  --danger: #e07a6a;
+  --glass: rgba(255, 255, 255, 0.06);
+  --radius: 18px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--bg-deep);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg-deep);
+  -webkit-font-smoothing: antialiased;
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(78, 201, 154, 0.22), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 80%, rgba(232, 197, 106, 0.12), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 0% 60%, rgba(47, 143, 114, 0.18), transparent 45%),
+    linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-deep) 55%);
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: calc(20px + var(--safe-top)) 20px calc(28px + var(--safe-bottom));
+}
+
+.brand-name {
+  margin: 0 0 8px;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: clamp(2.4rem, 9vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--coin-soft);
+  animation: rise 0.7s ease-out both;
+}
+
+.install-hint {
+  margin: 0 0 24px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(232, 197, 106, 0.35);
+  background: rgba(232, 197, 106, 0.12);
+  color: var(--coin-soft);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.install-hint[hidden] {
+  display: none;
+}
+
+.install-hint.ok {
+  border-color: rgba(78, 201, 154, 0.35);
+  background: rgba(78, 201, 154, 0.12);
+  color: var(--leaf-bright);
+}
+
+.jar {
+  text-align: center;
+  margin-bottom: 36px;
+  animation: rise 0.8s 0.08s ease-out both;
+}
+
+.jar-label {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.jar-amount {
+  margin: 0 0 18px;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: clamp(3rem, 14vw, 3.75rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--ink);
+  transition: transform 0.35s ease;
+}
+
+.jar-amount.bump {
+  transform: scale(1.04);
+}
+
+.jar-visual {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.jar-glass {
+  position: relative;
+  width: 110px;
+  height: 140px;
+  border: 2px solid rgba(244, 240, 230, 0.28);
+  border-radius: 18px 18px 28px 28px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.jar-glass::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 10px;
+  border-radius: 6px;
+  background: rgba(244, 240, 230, 0.18);
+}
+
+.jar-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0%;
+  background: linear-gradient(180deg, var(--leaf-bright), var(--leaf));
+  transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.jar-fill::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: -10%;
+  width: 120%;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(243, 223, 154, 0.35);
+  animation: shimmer 3.2s ease-in-out infinite;
+}
+
+.next-line {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ink-muted);
+  min-height: 1.4em;
+}
+
+.next-line strong {
+  color: var(--coin);
+  font-weight: 600;
+}
+
+.sources {
+  animation: rise 0.85s 0.16s ease-out both;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.btn-text,
+.btn-ghost,
+.btn-primary,
+.btn-icon {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+.btn-text {
+  color: var(--leaf-bright);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 6px 2px;
+}
+
+.source-form {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--glass);
+  border: 1px solid var(--line);
+}
+
+.source-form[hidden] {
+  display: none;
+}
+
+.source-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.source-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.source-form input:focus {
+  outline: 2px solid var(--leaf);
+  outline-offset: 1px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 10px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-ghost {
+  padding: 10px 14px;
+  color: var(--ink-muted);
+}
+
+.btn-primary {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--coin);
+  color: #1a2a22;
+  font-weight: 600;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.source-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.source-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--glass);
+  animation: rise 0.4s ease-out both;
+}
+
+.source-item.paid .source-name::after {
+  content: " in jar";
+  color: var(--leaf-bright);
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.source-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.source-meta {
+  grid-column: 1;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+.source-amount {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--coin-soft);
+}
+
+.source-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+
+.btn-icon:hover,
+.btn-icon:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
+}
+
+.btn-icon.delete:hover,
+.btn-icon.delete:focus-visible {
+  color: var(--danger);
+}
+
+.empty {
+  margin: 8px 0 0;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+}
+
+.empty[hidden] {
+  display: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    transform: translateX(-8%);
+  }
+  50% {
+    transform: translateX(8%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"></div>
+    <main class="app">
+      <header class="brand">
+        <p class="brand-name">Coin Pocket</p>
+        <p class="install-hint" id="install-hint" hidden></p>
+      </header>
+      <section class="jar" aria-live="polite">
+        <p class="jar-label">In the jar this month</p>
+        <p class="jar-amount" id="jar-amount">$0</p>
+        <div class="jar-visual" aria-hidden="true">
+          <div class="jar-glass">
+            <div class="jar-fill" id="jar-fill"></div>
+          </div>
+        </div>
+        <p class="next-line" id="next-line">Add a money source to begin</p>
+      </section>
+      <section class="sources" aria-labelledby="sources-heading">
+        <div class="section-head">
+          <h2 id="sources-heading">Sources</h2>
+          <button type="button" class="btn-text" id="toggle-form">Add</button>
+        </div>
+        <form class="source-form" id="source-form" hidden>
+          <label>
+            Name
+            <input type="text" name="name" id="source-name" placeholder="Salary" required autocomplete="off" />
+          </label>
+          <div class="form-row">
+            <label>
+              Amount
+              <input type="number" name="amount" id="source-amount" placeholder="1200" min="0" step="0.01" required inputmode="decimal" />
+            </label>
+            <label>
+              Day
+              <input type="number" name="day" id="source-day" placeholder="15" min="1" max="31" required inputmode="numeric" />
+            </label>
+          </div>
+          <input type="hidden" id="source-id" value="" />
+          <div class="form-actions">
+            <button type="button" class="btn-ghost" id="cancel-form">Cancel</button>
+            <button type="submit" class="btn-primary" id="save-source">Save</button>
+          </div>
+        </form>
+        <ul class="source-list" id="source-list"></ul>
+        <p class="empty" id="empty-state">No sources yet. Tap Add to create one.</p>
+      </section>
+    </main>
+    <script>
+const STORAGE_KEY = "coin-pocket-sources-v1";
+
+function uuid() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  }
+  return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+const els = {
+  jarAmount: document.getElementById("jar-amount"),
+  jarFill: document.getElementById("jar-fill"),
+  nextLine: document.getElementById("next-line"),
+  sourceList: document.getElementById("source-list"),
+  emptyState: document.getElementById("empty-state"),
+  form: document.getElementById("source-form"),
+  toggleForm: document.getElementById("toggle-form"),
+  cancelForm: document.getElementById("cancel-form"),
+  name: document.getElementById("source-name"),
+  amount: document.getElementById("source-amount"),
+  day: document.getElementById("source-day"),
+  id: document.getElementById("source-id"),
+  save: document.getElementById("save-source"),
+};
+
+function loadSources() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((s) => s && typeof s.name === "string" && Number.isFinite(s.amount) && Number.isFinite(s.day))
+      .map((s) => ({
+        id: String(s.id || uuid()),
+        name: s.name.trim(),
+        amount: Number(s.amount),
+        day: clampDay(Number(s.day)),
+      }));
+  } catch {
+    return [];
+  }
+}
+
+function saveSources(sources) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sources));
+}
+
+function clampDay(day) {
+  return Math.min(31, Math.max(1, Math.round(day)));
+}
+
+function daysInMonth(year, monthIndex) {
+  return new Date(year, monthIndex + 1, 0).getDate();
+}
+
+function effectivePayday(year, monthIndex, day) {
+  return Math.min(clampDay(day), daysInMonth(year, monthIndex));
+}
+
+function startOfDay(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function money(n) {
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: n % 1 === 0 ? 0 : 2,
+  }).format(n);
+}
+
+function ordinal(n) {
+  const v = n % 100;
+  if (v >= 11 && v <= 13) return `${n}th`;
+  switch (n % 10) {
+    case 1:
+      return `${n}st`;
+    case 2:
+      return `${n}nd`;
+    case 3:
+      return `${n}rd`;
+    default:
+      return `${n}th`;
+  }
+}
+
+function computeJar(sources, now = new Date()) {
+  const today = now.getDate();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  let total = 0;
+  const paidIds = new Set();
+
+  for (const source of sources) {
+    const payday = effectivePayday(year, month, source.day);
+    if (payday <= today) {
+      total += source.amount;
+      paidIds.add(source.id);
+    }
+  }
+
+  return { total, paidIds };
+}
+
+function computeNext(sources, now = new Date()) {
+  if (!sources.length) return null;
+
+  const todayStart = startOfDay(now);
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const today = now.getDate();
+
+  const upcoming = sources
+    .map((source) => {
+      const paydayThis = effectivePayday(year, month, source.day);
+      let payDate;
+      if (paydayThis >= today) {
+        payDate = new Date(year, month, paydayThis);
+      } else {
+        const nextMonth = month + 1;
+        const nextYear = nextMonth > 11 ? year + 1 : year;
+        const nextMonthIndex = nextMonth % 12;
+        const paydayNext = effectivePayday(nextYear, nextMonthIndex, source.day);
+        payDate = new Date(nextYear, nextMonthIndex, paydayNext);
+      }
+      const daysUntil = Math.round((startOfDay(payDate) - todayStart) / 86400000);
+      return { source, payDate, daysUntil };
+    })
+    .sort((a, b) => a.daysUntil - b.daysUntil || a.source.day - b.source.day);
+
+  return upcoming[0];
+}
+
+function setFormOpen(open, editing = null) {
+  els.form.hidden = !open;
+  els.toggleForm.textContent = open ? "Close" : "Add";
+  if (!open) {
+    els.form.reset();
+    els.id.value = "";
+    els.save.textContent = "Save";
+    return;
+  }
+  if (editing) {
+    els.id.value = editing.id;
+    els.name.value = editing.name;
+    els.amount.value = String(editing.amount);
+    els.day.value = String(editing.day);
+    els.save.textContent = "Update";
+    els.name.focus();
+  } else {
+    els.id.value = "";
+    els.save.textContent = "Save";
+    els.name.focus();
+  }
+}
+
+function render() {
+  const sources = loadSources().sort((a, b) => a.day - b.day || a.name.localeCompare(b.name));
+  const now = new Date();
+  const { total, paidIds } = computeJar(sources, now);
+  const next = computeNext(sources, now);
+  const monthTotal = sources.reduce((sum, s) => sum + s.amount, 0);
+  const fillPct = monthTotal > 0 ? Math.min(100, Math.round((total / monthTotal) * 100)) : 0;
+
+  els.jarAmount.textContent = money(total);
+  els.jarFill.style.height = `${fillPct}%`;
+  els.jarAmount.classList.remove("bump");
+  void els.jarAmount.offsetWidth;
+  els.jarAmount.classList.add("bump");
+
+  if (!next) {
+    els.nextLine.textContent = "Add a money source to begin";
+  } else if (next.daysUntil === 0) {
+    els.nextLine.innerHTML = `Today: <strong>${escapeHtml(next.source.name)}</strong> · ${money(next.source.amount)}`;
+  } else if (next.daysUntil === 1) {
+    els.nextLine.innerHTML = `Next in <strong>1 day</strong> · ${escapeHtml(next.source.name)} · ${money(next.source.amount)}`;
+  } else {
+    els.nextLine.innerHTML = `Next in <strong>${next.daysUntil} days</strong> · ${escapeHtml(next.source.name)} · ${money(next.source.amount)}`;
+  }
+
+  els.emptyState.hidden = sources.length > 0;
+  els.sourceList.innerHTML = sources
+    .map((source) => {
+      const paid = paidIds.has(source.id);
+      return `
+        <li class="source-item${paid ? " paid" : ""}" data-id="${source.id}">
+          <div class="source-name">${escapeHtml(source.name)}</div>
+          <div class="source-amount">${money(source.amount)}</div>
+          <div class="source-meta">Day ${ordinal(source.day)}${paid ? "" : " · upcoming"}</div>
+          <div class="source-actions">
+            <button type="button" class="btn-icon edit" data-action="edit" aria-label="Edit ${escapeHtml(source.name)}">Edit</button>
+            <button type="button" class="btn-icon delete" data-action="delete" aria-label="Delete ${escapeHtml(source.name)}">Del</button>
+          </div>
+        </li>
+      `;
+    })
+    .join("");
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+els.toggleForm.addEventListener("click", () => {
+  setFormOpen(els.form.hidden);
+});
+
+els.cancelForm.addEventListener("click", () => {
+  setFormOpen(false);
+});
+
+els.form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const name = els.name.value.trim();
+  const amount = Number(els.amount.value);
+  const day = clampDay(Number(els.day.value));
+  if (!name || !Number.isFinite(amount) || amount < 0 || !Number.isFinite(day)) return;
+
+  const sources = loadSources();
+  const editingId = els.id.value;
+  if (editingId) {
+    const idx = sources.findIndex((s) => s.id === editingId);
+    if (idx >= 0) {
+      sources[idx] = { ...sources[idx], name, amount, day };
+    }
+  } else {
+    sources.push({
+      id: uuid(),
+      name,
+      amount,
+      day,
+    });
+  }
+  saveSources(sources);
+  setFormOpen(false);
+  render();
+});
+
+els.sourceList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-action]");
+  if (!button) return;
+  const item = button.closest(".source-item");
+  if (!item) return;
+  const id = item.dataset.id;
+  const sources = loadSources();
+  const source = sources.find((s) => s.id === id);
+  if (!source) return;
+
+  if (button.dataset.action === "edit") {
+    setFormOpen(true, source);
+    return;
+  }
+
+  if (button.dataset.action === "delete") {
+    saveSources(sources.filter((s) => s.id !== id));
+    if (els.id.value === id) setFormOpen(false);
+    render();
+  }
+});
+
+render();
+
+const installHint = document.getElementById("install-hint");
+
+function setHint(text, ok = false) {
+  if (!installHint) return;
+  installHint.hidden = !text;
+  installHint.textContent = text;
+  installHint.classList.toggle("ok", ok);
+}
+
+setHint("This file works offline. Keep it in Files / iCloud, then Add to Home Screen.", true);
+
+    </script>
+  </body>
+</html>
