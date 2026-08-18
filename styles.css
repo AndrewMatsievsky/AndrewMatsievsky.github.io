@@ -72,6 +72,14 @@ body {
   border-color: rgba(232, 197, 106, 0.4);
 }
 
+.privacy-font {
+  font-family: "Apple Braille", "Segoe UI Symbol", "Noto Sans Symbols", "DejaVu Sans", monospace;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  speak: never;
+}
+
 .jar-row {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -286,7 +294,7 @@ body {
   right: 0;
   bottom: 0;
   height: 0%;
-  background: linear-gradient(180deg, var(--leaf-bright), var(--leaf));
+  background: linear-gradient(180deg, #f3df9a, #e8c56a 45%, #c9a03a 78%, #9a7828);
   transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -298,7 +306,7 @@ body {
   width: 120%;
   height: 14px;
   border-radius: 50%;
-  background: rgba(243, 223, 154, 0.35);
+  background: rgba(255, 246, 200, 0.55);
   animation: shimmer 3.2s ease-in-out infinite;
 }
 
@@ -438,15 +446,20 @@ body {
 }
 
 .source-item.paid .source-name::after {
-  content: " у кишені";
+  content: "у кишені";
   color: var(--leaf-bright);
   font-weight: 500;
   font-size: 0.75rem;
+  line-height: 1;
 }
 
 .source-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
   font-weight: 600;
   font-size: 1.05rem;
+  line-height: 1.2;
 }
 
 .source-meta {
@@ -460,6 +473,7 @@ body {
   font-size: 1.2rem;
   font-weight: 500;
   color: var(--coin-soft);
+  text-align: right;
 }
 
 .source-actions {

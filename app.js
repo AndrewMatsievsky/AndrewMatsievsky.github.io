@@ -118,20 +118,24 @@ function startOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-function money(n) {
+function money(n, digits) {
+  const max = digits == null ? (Math.abs(n % 1) < 1e-9 ? 0 : 2) : digits;
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    maximumFractionDigits: Math.abs(n % 1) < 1e-9 ? 0 : 2,
+    minimumFractionDigits: digits == null ? max : digits,
+    maximumFractionDigits: max,
   }).format(n);
 }
 
-function displayMoney(n) {
-  return isPrivacyOn() ? "🤑🤑🤑" : money(n);
+function displayMoney(n, digits) {
+  if (!isPrivacyOn()) return money(n, digits);
+  return '<span class="privacy-font" aria-hidden="true">⠿⠿⠿</span>';
 }
 
 function displayName(name) {
-  return isPrivacyOn() ? "🤑🤑🤑🤑🤑" : name;
+  if (!isPrivacyOn()) return escapeHtml(name);
+  return '<span class="privacy-font" aria-hidden="true">⠿⠿⠿⠿⠿</span>';
 }
 
 function daysWord(n) {
@@ -193,7 +197,7 @@ function updateEarnedSoFar(dailyAmount, now = new Date()) {
   const earned = computeEarnedSoFar(dailyAmount, now);
   const workHours = DAY_END_HOUR - DAY_START_HOUR;
   const hourly = dailyAmount / workHours;
-  els.earnedSoFar.innerHTML = `Зароблено<br>${displayMoney(earned)}<br><span class="earned-rate">${displayMoney(hourly)}/год</span>`;
+  els.earnedSoFar.innerHTML = `Зароблено<br>${displayMoney(earned, 4)}<br><span class="earned-rate">${displayMoney(hourly)}/год</span>`;
 }
 
 function computeJar(sources, now = new Date()) {
@@ -296,17 +300,19 @@ function render() {
     els.monthLine.textContent = `${name.charAt(0).toUpperCase()}${name.slice(1)} ${now.getFullYear()}`;
   }
 
-  els.jarAmount.textContent = displayMoney(total);
+  els.jarAmount.innerHTML = displayMoney(total);
   if (els.jarMonthTotal) {
-    els.jarMonthTotal.textContent = `За місяць: ${displayMoney(monthTotal)}`;
+    els.jarMonthTotal.innerHTML = `За місяць: ${displayMoney(monthTotal)}`;
   }
-  els.jarFill.style.height = `${fillPct}%`;
+  if (els.jarFill) {
+    els.jarFill.style.height = `${fillPct}%`;
+  }
   els.jarAmount.classList.remove("bump");
   void els.jarAmount.offsetWidth;
   els.jarAmount.classList.add("bump");
 
   if (els.todayLine) {
-    els.todayLine.textContent =
+    els.todayLine.innerHTML =
       sources.length === 0
         ? `За сьогодні: ${displayMoney(0)}`
         : `За сьогодні: ${displayMoney(todayEarned)} · ${workDays} роб. дн.`;
@@ -318,21 +324,20 @@ function render() {
   if (!next) {
     els.nextLine.textContent = "Додайте джерело доходу";
   } else if (next.daysUntil === 0) {
-    els.nextLine.innerHTML = `Сьогодні: <strong>${escapeHtml(displayName(next.source.name))}</strong> · ${displayMoney(next.source.amount)}`;
+    els.nextLine.innerHTML = `Сьогодні: <strong>${displayName(next.source.name)}</strong> · ${displayMoney(next.source.amount)}`;
   } else {
-    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${escapeHtml(displayName(next.source.name))} · ${displayMoney(next.source.amount)}`;
+    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${displayName(next.source.name)} · ${displayMoney(next.source.amount)}`;
   }
 
   els.emptyState.hidden = sources.length > 0;
   els.sourceList.innerHTML = sources
     .map((source) => {
       const paid = paidIds.has(source.id);
-      const shownName = displayName(source.name);
       return `
         <li class="source-item${paid ? " paid" : ""}" data-id="${source.id}">
-          <div class="source-name">${escapeHtml(shownName)}</div>
+          <div class="source-name">${displayName(source.name)}</div>
           <div class="source-amount">${displayMoney(source.amount)}</div>
-          <div class="source-meta">${source.day} число${paid ? " · у кишені" : " · очікується"}</div>
+          <div class="source-meta">${source.day} число${paid ? "" : " · очікується"}</div>
           <div class="source-actions">
             <button type="button" class="btn-icon edit" data-action="edit" aria-label="Редагувати">Редагувати</button>
             <button type="button" class="btn-icon delete" data-action="delete" aria-label="Видалити">Видалити</button>
@@ -414,13 +419,13 @@ els.sourceList.addEventListener("click", (event) => {
 
 setPrivacy(isPrivacyOn());
 render();
-setInterval(spawnDrop, 1000);
+setInterval(spawnDrop, 500);
 spawnDrop();
 setInterval(() => {
-  const now = new Date();
-  updateDayEndLine(now);
-  updateEarnedSoFar(computeTodayEarned(loadSources(), now), now);
-}, 60000);
+  updateEarnedSoFar(computeTodayEarned(loadSources(), new Date()), new Date());
+}, 1000);
+updateEarnedSoFar(computeTodayEarned(loadSources(), new Date()), new Date());
+setInterval(() => updateDayEndLine(new Date()), 60000);
 
 const installHint = document.getElementById("install-hint");
 
