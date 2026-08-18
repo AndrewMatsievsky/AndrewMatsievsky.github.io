@@ -341,26 +341,6 @@ body {
   z-index: 3;
 }
 
-.jar-glass::after {
-  content: "";
-  position: absolute;
-  top: 18px;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 246, 200, 0.55),
-    rgba(232, 197, 106, 0.5) 45%,
-    rgba(201, 160, 58, 0.35)
-  );
-  opacity: 0.5;
-  pointer-events: none;
-  z-index: 3;
-}
-
 .jar-fill {
   position: absolute;
   left: 0;
