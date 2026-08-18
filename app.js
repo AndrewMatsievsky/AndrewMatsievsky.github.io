@@ -89,7 +89,7 @@ function setPrivacy(on) {
     els.privacyBtn.setAttribute("aria-pressed", on ? "true" : "false");
     els.privacyBtn.textContent = on ? "Показати" : "Приховати";
   }
-  render();
+  updatePrivacyViews();
 }
 
 function clampDay(day) {
@@ -286,7 +286,49 @@ function spawnDrop() {
   drop.addEventListener("animationend", () => drop.remove());
 }
 
-function render() {
+function updatePrivacyViews() {
+  const sources = loadSources().sort((a, b) => a.day - b.day || a.name.localeCompare(b.name, "uk"));
+  const now = new Date();
+  const { total } = computeJar(sources, now);
+  const next = computeNext(sources, now);
+  const todayEarned = computeTodayEarned(sources, now);
+  const workDays = workingDaysInMonth(now.getFullYear(), now.getMonth());
+  const monthTotal = sources.reduce((sum, s) => sum + s.amount, 0);
+
+  els.jarAmount.innerHTML = displayMoney(total);
+  if (els.jarMonthTotal) {
+    els.jarMonthTotal.innerHTML = `За місяць: ${displayMoney(monthTotal)}`;
+  }
+  if (els.todayLine) {
+    els.todayLine.innerHTML =
+      sources.length === 0
+        ? `За сьогодні: ${displayMoney(0)}`
+        : `За сьогодні: ${displayMoney(todayEarned)} · ${workDays} роб. дн.`;
+  }
+
+  updateEarnedSoFar(todayEarned, now);
+
+  if (!next) {
+    els.nextLine.textContent = "Додайте джерело доходу";
+  } else if (next.daysUntil === 0) {
+    els.nextLine.innerHTML = `Сьогодні: <strong>${displayName(next.source.name)}</strong> · ${displayMoney(next.source.amount)}`;
+  } else {
+    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${displayName(next.source.name)} · ${displayMoney(next.source.amount)}`;
+  }
+
+  els.sourceList.querySelectorAll(".source-item").forEach((item) => {
+    const id = item.dataset.id;
+    const source = sources.find((s) => s.id === id);
+    if (!source) return;
+    const nameEl = item.querySelector(".source-name");
+    const amountEl = item.querySelector(".source-amount");
+    if (nameEl) nameEl.innerHTML = displayName(source.name);
+    if (amountEl) amountEl.innerHTML = displayMoney(source.amount);
+  });
+}
+
+function render(options = {}) {
+  const bump = options.bump !== false;
   const sources = loadSources().sort((a, b) => a.day - b.day || a.name.localeCompare(b.name, "uk"));
   const now = new Date();
   const { total, paidIds } = computeJar(sources, now);
@@ -308,10 +350,11 @@ function render() {
   if (els.jarFill) {
     els.jarFill.style.height = `${fillPct}%`;
   }
-  els.jarAmount.classList.remove("bump");
-  void els.jarAmount.offsetWidth;
-  els.jarAmount.classList.add("bump");
-
+  if (bump) {
+    els.jarAmount.classList.remove("bump");
+    void els.jarAmount.offsetWidth;
+    els.jarAmount.classList.add("bump");
+  }
   if (els.todayLine) {
     els.todayLine.innerHTML =
       sources.length === 0
@@ -331,11 +374,20 @@ function render() {
   }
 
   els.emptyState.hidden = sources.length > 0;
-  els.sourceList.innerHTML = sources
-    .map((source) => {
-      const paid = paidIds.has(source.id);
-      return `
-        <li class="source-item${paid ? " paid" : ""}" data-id="${source.id}">
+
+  const existing = [...els.sourceList.querySelectorAll(".source-item")];
+  const existingIds = existing.map((el) => el.dataset.id);
+  const sourceIds = sources.map((s) => s.id);
+  const listChanged =
+    existingIds.length !== sourceIds.length ||
+    sourceIds.some((id, i) => id !== existingIds[i]);
+
+  if (listChanged) {
+    els.sourceList.innerHTML = sources
+      .map((source) => {
+        const paid = paidIds.has(source.id);
+        return `
+        <li class="source-item is-new${paid ? " paid" : ""}" data-id="${source.id}">
           <div class="source-name">${displayName(source.name)}</div>
           <div class="source-amount">${displayMoney(source.amount)}</div>
           <div class="source-meta">${source.day} число${paid ? "" : " · очікується"}</div>
@@ -345,8 +397,23 @@ function render() {
           </div>
         </li>
       `;
-    })
-    .join("");
+      })
+      .join("");
+  } else {
+    sources.forEach((source) => {
+      const item = els.sourceList.querySelector(`.source-item[data-id="${source.id}"]`);
+      if (!item) return;
+      item.classList.toggle("paid", paidIds.has(source.id));
+      const nameEl = item.querySelector(".source-name");
+      const amountEl = item.querySelector(".source-amount");
+      const metaEl = item.querySelector(".source-meta");
+      if (nameEl) nameEl.innerHTML = displayName(source.name);
+      if (amountEl) amountEl.innerHTML = displayMoney(source.amount);
+      if (metaEl) {
+        metaEl.textContent = `${source.day} число${paidIds.has(source.id) ? "" : " · очікується"}`;
+      }
+    });
+  }
 }
 
 function escapeHtml(str) {
