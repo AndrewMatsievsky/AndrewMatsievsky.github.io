@@ -267,7 +267,7 @@ body {
 
 .drops {
   position: absolute;
-  inset: 0 20px 50px;
+  inset: 0 18px 42px;
   overflow: hidden;
   pointer-events: none;
   z-index: 2;
@@ -315,30 +315,86 @@ body {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 110px;
-  height: 140px;
-  border: 2px solid rgba(244, 240, 230, 0.28);
-  border-radius: 18px 18px 28px 28px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.02)
-  );
-  overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  width: 118px;
+  height: 158px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+  border: none;
+  overflow: visible;
 }
 
-.jar-glass::before {
-  content: "";
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 10px;
+.jar-rim {
+  position: relative;
+  z-index: 4;
+  width: 86%;
+  height: 12px;
   border-radius: 6px;
-  background: rgba(244, 240, 230, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(244, 240, 230, 0.42),
+    rgba(244, 240, 230, 0.18)
+  );
+  border: 1.5px solid rgba(244, 240, 230, 0.35);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.jar-neck {
+  position: relative;
   z-index: 3;
+  width: 80%;
+  height: 16px;
+  margin-top: -2px;
+  border: 1.5px solid rgba(244, 240, 230, 0.28);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.14) 40%,
+    rgba(255, 255, 255, 0.04)
+  );
+  flex-shrink: 0;
+}
+
+.jar-body {
+  position: relative;
+  z-index: 2;
+  width: 118px;
+  flex: 1;
+  margin-top: -1px;
+  border: 2px solid rgba(244, 240, 230, 0.32);
+  border-radius: 14px 14px 34px 34px;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(0, 0, 0, 0.08)
+  );
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset -10px 0 18px rgba(0, 0, 0, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.jar-shine {
+  position: absolute;
+  top: 12px;
+  bottom: 18px;
+  left: 12px;
+  width: 10px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0.08)
+  );
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 4;
 }
 
 .jar-fill {
