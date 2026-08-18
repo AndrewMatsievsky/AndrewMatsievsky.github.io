@@ -18,6 +18,9 @@
   </head>
   <body>
     <div class="atmosphere" aria-hidden="true"></div>
+    <button type="button" class="privacy-btn" id="privacy-btn" aria-pressed="false" aria-label="Приховати суми">
+      Приховати
+    </button>
     <main class="app">
       <header class="brand">
         <p class="brand-name">Кишеня</p>
@@ -26,15 +29,19 @@
       </header>
 
       <section class="jar" aria-live="polite">
-        <p class="jar-label">У кишені цього місяця</p>
-        <p class="jar-amount" id="jar-amount">$0</p>
-        <div class="jar-stage" aria-hidden="true">
-          <div class="drops" id="drops"></div>
-          <div class="jar-glass">
-            <div class="jar-fill" id="jar-fill"></div>
+        <p class="jar-amount privacy-num" id="jar-amount">$0</p>
+        <p class="jar-month-total privacy-num" id="jar-month-total"></p>
+        <div class="jar-row">
+          <p class="day-end-line" id="day-end-line"></p>
+          <div class="jar-stage" aria-hidden="true">
+            <div class="drops" id="drops"></div>
+            <div class="jar-glass">
+              <div class="jar-fill" id="jar-fill"></div>
+            </div>
           </div>
+          <p class="earned-so-far" id="earned-so-far"></p>
         </div>
-        <p class="today-line" id="today-line">За сьогодні: $0</p>
+        <p class="today-line privacy-num" id="today-line">За сьогодні: $0</p>
         <p class="next-line" id="next-line">Додайте джерело доходу</p>
       </section>
 

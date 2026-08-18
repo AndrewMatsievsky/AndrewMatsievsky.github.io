@@ -1,4 +1,7 @@
 const STORAGE_KEY = "coin-pocket-sources-v1";
+const PRIVACY_KEY = "coin-pocket-privacy-v1";
+const DAY_START_HOUR = 9;
+const DAY_END_HOUR = 18;
 
 const MONTHS_UK = [
   "січень",
@@ -31,9 +34,12 @@ function uuid() {
 
 const els = {
   jarAmount: document.getElementById("jar-amount"),
+  jarMonthTotal: document.getElementById("jar-month-total"),
   jarFill: document.getElementById("jar-fill"),
   nextLine: document.getElementById("next-line"),
   todayLine: document.getElementById("today-line"),
+  dayEndLine: document.getElementById("day-end-line"),
+  earnedSoFar: document.getElementById("earned-so-far"),
   monthLine: document.getElementById("month-line"),
   drops: document.getElementById("drops"),
   sourceList: document.getElementById("source-list"),
@@ -46,6 +52,7 @@ const els = {
   day: document.getElementById("source-day"),
   id: document.getElementById("source-id"),
   save: document.getElementById("save-source"),
+  privacyBtn: document.getElementById("privacy-btn"),
 };
 
 function loadSources() {
@@ -69,6 +76,20 @@ function loadSources() {
 
 function saveSources(sources) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sources));
+}
+
+function isPrivacyOn() {
+  return localStorage.getItem(PRIVACY_KEY) === "1";
+}
+
+function setPrivacy(on) {
+  localStorage.setItem(PRIVACY_KEY, on ? "1" : "0");
+  document.body.classList.toggle("privacy-on", on);
+  if (els.privacyBtn) {
+    els.privacyBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    els.privacyBtn.textContent = on ? "Показати" : "Приховати";
+  }
+  render();
 }
 
 function clampDay(day) {
@@ -105,6 +126,14 @@ function money(n) {
   }).format(n);
 }
 
+function displayMoney(n) {
+  return isPrivacyOn() ? "🤑🤑🤑" : money(n);
+}
+
+function displayName(name) {
+  return isPrivacyOn() ? "🤑🤑🤑🤑🤑" : name;
+}
+
 function daysWord(n) {
   const abs = Math.abs(n) % 100;
   const last = abs % 10;
@@ -112,6 +141,59 @@ function daysWord(n) {
   if (last === 1) return "день";
   if (last >= 2 && last <= 4) return "дні";
   return "днів";
+}
+
+function hoursWord(n) {
+  const abs = Math.abs(n) % 100;
+  const last = abs % 10;
+  if (abs > 10 && abs < 20) return "годин";
+  if (last === 1) return "година";
+  if (last >= 2 && last <= 4) return "години";
+  return "годин";
+}
+
+function hoursUntilDayEnd(now = new Date()) {
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), DAY_END_HOUR, 0, 0, 0);
+  const ms = end - now;
+  if (ms <= 0) return 0;
+  return Math.ceil(ms / 3600000);
+}
+
+function workdayBounds(now = new Date()) {
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), DAY_START_HOUR, 0, 0, 0);
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), DAY_END_HOUR, 0, 0, 0);
+  return { start, end, totalMs: end - start };
+}
+
+function computeEarnedSoFar(dailyAmount, now = new Date()) {
+  const weekday = now.getDay();
+  if (weekday === 0 || weekday === 6) return 0;
+
+  const { start, end, totalMs } = workdayBounds(now);
+  if (totalMs <= 0) return 0;
+  if (now <= start) return 0;
+  if (now >= end) return dailyAmount;
+
+  const elapsed = now - start;
+  return dailyAmount * (elapsed / totalMs);
+}
+
+function updateDayEndLine(now = new Date()) {
+  if (!els.dayEndLine) return;
+  const hours = hoursUntilDayEnd(now);
+  if (hours <= 0) {
+    els.dayEndLine.textContent = "День до 18:00 закінчився";
+    return;
+  }
+  els.dayEndLine.innerHTML = `До кінця дня<br>18:00 · ${hours} ${hoursWord(hours)}`;
+}
+
+function updateEarnedSoFar(dailyAmount, now = new Date()) {
+  if (!els.earnedSoFar) return;
+  const earned = computeEarnedSoFar(dailyAmount, now);
+  const workHours = DAY_END_HOUR - DAY_START_HOUR;
+  const hourly = dailyAmount / workHours;
+  els.earnedSoFar.innerHTML = `Зароблено<br>${displayMoney(earned)}<br><span class="earned-rate">${displayMoney(hourly)}/год</span>`;
 }
 
 function computeJar(sources, now = new Date()) {
@@ -214,7 +296,10 @@ function render() {
     els.monthLine.textContent = `${name.charAt(0).toUpperCase()}${name.slice(1)} ${now.getFullYear()}`;
   }
 
-  els.jarAmount.textContent = money(total);
+  els.jarAmount.textContent = displayMoney(total);
+  if (els.jarMonthTotal) {
+    els.jarMonthTotal.textContent = `За місяць: ${displayMoney(monthTotal)}`;
+  }
   els.jarFill.style.height = `${fillPct}%`;
   els.jarAmount.classList.remove("bump");
   void els.jarAmount.offsetWidth;
@@ -223,31 +308,34 @@ function render() {
   if (els.todayLine) {
     els.todayLine.textContent =
       sources.length === 0
-        ? "За сьогодні: $0"
-        : `За сьогодні: ${money(todayEarned)} · ${workDays} роб. дн.`;
+        ? `За сьогодні: ${displayMoney(0)}`
+        : `За сьогодні: ${displayMoney(todayEarned)} · ${workDays} роб. дн.`;
   }
+
+  updateDayEndLine(now);
+  updateEarnedSoFar(todayEarned, now);
 
   if (!next) {
     els.nextLine.textContent = "Додайте джерело доходу";
   } else if (next.daysUntil === 0) {
-    els.nextLine.innerHTML = `Сьогодні: <strong>${escapeHtml(next.source.name)}</strong> · ${money(next.source.amount)}`;
+    els.nextLine.innerHTML = `Сьогодні: <strong>${escapeHtml(displayName(next.source.name))}</strong> · ${displayMoney(next.source.amount)}`;
   } else {
-    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${escapeHtml(next.source.name)} · ${money(next.source.amount)}`;
+    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${escapeHtml(displayName(next.source.name))} · ${displayMoney(next.source.amount)}`;
   }
 
   els.emptyState.hidden = sources.length > 0;
   els.sourceList.innerHTML = sources
     .map((source) => {
       const paid = paidIds.has(source.id);
-      const daily = source.amount / workDays;
+      const shownName = displayName(source.name);
       return `
         <li class="source-item${paid ? " paid" : ""}" data-id="${source.id}">
-          <div class="source-name">${escapeHtml(source.name)}</div>
-          <div class="source-amount">${money(source.amount)}</div>
-          <div class="source-meta">${source.day} число${paid ? " · у кишені" : " · очікується"} · ${money(daily)}/день</div>
+          <div class="source-name">${escapeHtml(shownName)}</div>
+          <div class="source-amount">${displayMoney(source.amount)}</div>
+          <div class="source-meta">${source.day} число${paid ? " · у кишені" : " · очікується"}</div>
           <div class="source-actions">
-            <button type="button" class="btn-icon edit" data-action="edit" aria-label="Редагувати ${escapeHtml(source.name)}">Редагувати</button>
-            <button type="button" class="btn-icon delete" data-action="delete" aria-label="Видалити ${escapeHtml(source.name)}">Видалити</button>
+            <button type="button" class="btn-icon edit" data-action="edit" aria-label="Редагувати">Редагувати</button>
+            <button type="button" class="btn-icon delete" data-action="delete" aria-label="Видалити">Видалити</button>
           </div>
         </li>
       `;
@@ -269,6 +357,10 @@ els.toggleForm.addEventListener("click", () => {
 
 els.cancelForm.addEventListener("click", () => {
   setFormOpen(false);
+});
+
+els.privacyBtn?.addEventListener("click", () => {
+  setPrivacy(!isPrivacyOn());
 });
 
 els.form.addEventListener("submit", (event) => {
@@ -320,9 +412,15 @@ els.sourceList.addEventListener("click", (event) => {
   }
 });
 
+setPrivacy(isPrivacyOn());
 render();
 setInterval(spawnDrop, 1000);
 spawnDrop();
+setInterval(() => {
+  const now = new Date();
+  updateDayEndLine(now);
+  updateEarnedSoFar(computeTodayEarned(loadSources(), now), now);
+}, 60000);
 
 const installHint = document.getElementById("install-hint");
 
@@ -342,9 +440,7 @@ async function setupOffline() {
   try {
     const reg = await navigator.serviceWorker.register("./sw.js");
     await navigator.serviceWorker.ready;
-    if (reg.active || navigator.serviceWorker.controller) {
-      setHint("Готово офлайн — сервер можна вимкнути.", true);
-    } else {
+    if (!(reg.active || navigator.serviceWorker.controller)) {
       setHint("Кешування… відкрийте ще раз після встановлення.", true);
     }
   } catch {

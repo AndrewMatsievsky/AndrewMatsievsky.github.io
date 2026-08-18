@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#0f2e28" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Кишеня" />
-<link rel="apple-touch-icon" href="data:image/png;base64,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" />
-<title>Кишеня</title>
-<style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0f2e28" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Кишеня" />
+    <link rel="apple-touch-icon" href="data:image/png;base64,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" />
+    <style>
 :root {
   --bg-deep: #0c2420;
   --bg-mid: #14352f;
@@ -58,6 +60,79 @@ body {
     radial-gradient(ellipse 50% 35% at 0% 60%, rgba(47, 143, 114, 0.18), transparent 45%),
     linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-deep) 55%);
   z-index: 0;
+}
+
+.privacy-btn {
+  position: fixed;
+  top: calc(10px + var(--safe-top));
+  right: 14px;
+  z-index: 5;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(12, 36, 32, 0.72);
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.privacy-btn[aria-pressed="true"] {
+  color: var(--coin-soft);
+  border-color: rgba(232, 197, 106, 0.4);
+}
+
+.jar-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.day-end-line {
+  margin: 0;
+  justify-self: start;
+  max-width: 7.5rem;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(12, 36, 32, 0.55);
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.earned-so-far {
+  margin: 0;
+  justify-self: end;
+  max-width: 7.5rem;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(12, 36, 32, 0.55);
+  color: var(--leaf-bright);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.earned-so-far .earned-rate {
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+.jar-stage {
+  position: relative;
+  width: 160px;
+  height: 200px;
+  margin: 0;
+  justify-self: center;
 }
 
 .app {
@@ -129,7 +204,7 @@ body {
 }
 
 .jar-amount {
-  margin: 0 0 18px;
+  margin: 0 0 6px;
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: clamp(3rem, 14vw, 3.75rem);
   font-weight: 700;
@@ -143,17 +218,10 @@ body {
   transform: scale(1.04);
 }
 
-.jar-visual {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
-}
-
-.jar-stage {
-  position: relative;
-  width: 160px;
-  height: 200px;
-  margin: 0 auto 16px;
+.jar-month-total {
+  margin: 0 0 18px;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
 }
 
 .drops {
@@ -476,48 +544,99 @@ body {
 }
 
 </style>
-</head>
-<body>
-<div class="atmosphere" aria-hidden="true"></div>
-<main class="app">
-<header class="brand">
-<p class="brand-name">Кишеня</p>
-<p class="month-line" id="month-line"></p>
-<p class="install-hint" id="install-hint" hidden></p>
-</header>
-<section class="jar" aria-live="polite">
-<p class="jar-label">У кишені цього місяця</p>
-<p class="jar-amount" id="jar-amount">$0</p>
-<div class="jar-stage" aria-hidden="true">
-<div class="drops" id="drops"></div>
-<div class="jar-glass"><div class="jar-fill" id="jar-fill"></div></div>
-</div>
-<p class="today-line" id="today-line">За сьогодні: $0</p>
-<p class="next-line" id="next-line">Додайте джерело доходу</p>
-</section>
-<section class="sources" aria-labelledby="sources-heading">
-<div class="section-head">
-<h2 id="sources-heading">Джерела</h2>
-<button type="button" class="btn-text" id="toggle-form">Додати</button>
-</div>
-<form class="source-form" id="source-form" hidden>
-<label>Назва<input type="text" name="name" id="source-name" placeholder="Зарплата" required autocomplete="off" /></label>
-<div class="form-row">
-<label>Сума<input type="number" name="amount" id="source-amount" placeholder="1200" min="0" step="0.01" required inputmode="decimal" /></label>
-<label>День<input type="number" name="day" id="source-day" placeholder="15" min="1" max="31" required inputmode="numeric" /></label>
-</div>
-<input type="hidden" id="source-id" value="" />
-<div class="form-actions">
-<button type="button" class="btn-ghost" id="cancel-form">Скасувати</button>
-<button type="submit" class="btn-primary" id="save-source">Зберегти</button>
-</div>
-</form>
-<ul class="source-list" id="source-list"></ul>
-<p class="empty" id="empty-state">Ще немає джерел. Натисніть «Додати».</p>
-</section>
-</main>
-<script>
+    <title>Кишеня</title>
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"></div>
+    <button type="button" class="privacy-btn" id="privacy-btn" aria-pressed="false" aria-label="Приховати суми">
+      Приховати
+    </button>
+    <main class="app">
+      <header class="brand">
+        <p class="brand-name">Кишеня</p>
+        <p class="month-line" id="month-line"></p>
+        <p class="install-hint" id="install-hint" hidden></p>
+      </header>
+
+      <section class="jar" aria-live="polite">
+        <p class="jar-amount privacy-num" id="jar-amount">$0</p>
+        <p class="jar-month-total privacy-num" id="jar-month-total"></p>
+        <div class="jar-row">
+          <p class="day-end-line" id="day-end-line"></p>
+          <div class="jar-stage" aria-hidden="true">
+            <div class="drops" id="drops"></div>
+            <div class="jar-glass">
+              <div class="jar-fill" id="jar-fill"></div>
+            </div>
+          </div>
+          <p class="earned-so-far" id="earned-so-far"></p>
+        </div>
+        <p class="today-line privacy-num" id="today-line">За сьогодні: $0</p>
+        <p class="next-line" id="next-line">Додайте джерело доходу</p>
+      </section>
+
+      <section class="sources" aria-labelledby="sources-heading">
+        <div class="section-head">
+          <h2 id="sources-heading">Джерела</h2>
+          <button type="button" class="btn-text" id="toggle-form">Додати</button>
+        </div>
+
+        <form class="source-form" id="source-form" hidden>
+          <label>
+            Назва
+            <input
+              type="text"
+              name="name"
+              id="source-name"
+              placeholder="Зарплата"
+              required
+              autocomplete="off"
+            />
+          </label>
+          <div class="form-row">
+            <label>
+              Сума
+              <input
+                type="number"
+                name="amount"
+                id="source-amount"
+                placeholder="1200"
+                min="0"
+                step="0.01"
+                required
+                inputmode="decimal"
+              />
+            </label>
+            <label>
+              День
+              <input
+                type="number"
+                name="day"
+                id="source-day"
+                placeholder="15"
+                min="1"
+                max="31"
+                required
+                inputmode="numeric"
+              />
+            </label>
+          </div>
+          <input type="hidden" id="source-id" value="" />
+          <div class="form-actions">
+            <button type="button" class="btn-ghost" id="cancel-form">Скасувати</button>
+            <button type="submit" class="btn-primary" id="save-source">Зберегти</button>
+          </div>
+        </form>
+
+        <ul class="source-list" id="source-list"></ul>
+        <p class="empty" id="empty-state">Ще немає джерел. Натисніть «Додати».</p>
+      </section>
+    </main>
+    <script>
 const STORAGE_KEY = "coin-pocket-sources-v1";
+const PRIVACY_KEY = "coin-pocket-privacy-v1";
+const DAY_START_HOUR = 9;
+const DAY_END_HOUR = 18;
 
 const MONTHS_UK = [
   "січень",
@@ -550,9 +669,12 @@ function uuid() {
 
 const els = {
   jarAmount: document.getElementById("jar-amount"),
+  jarMonthTotal: document.getElementById("jar-month-total"),
   jarFill: document.getElementById("jar-fill"),
   nextLine: document.getElementById("next-line"),
   todayLine: document.getElementById("today-line"),
+  dayEndLine: document.getElementById("day-end-line"),
+  earnedSoFar: document.getElementById("earned-so-far"),
   monthLine: document.getElementById("month-line"),
   drops: document.getElementById("drops"),
   sourceList: document.getElementById("source-list"),
@@ -565,6 +687,7 @@ const els = {
   day: document.getElementById("source-day"),
   id: document.getElementById("source-id"),
   save: document.getElementById("save-source"),
+  privacyBtn: document.getElementById("privacy-btn"),
 };
 
 function loadSources() {
@@ -588,6 +711,20 @@ function loadSources() {
 
 function saveSources(sources) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sources));
+}
+
+function isPrivacyOn() {
+  return localStorage.getItem(PRIVACY_KEY) === "1";
+}
+
+function setPrivacy(on) {
+  localStorage.setItem(PRIVACY_KEY, on ? "1" : "0");
+  document.body.classList.toggle("privacy-on", on);
+  if (els.privacyBtn) {
+    els.privacyBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    els.privacyBtn.textContent = on ? "Показати" : "Приховати";
+  }
+  render();
 }
 
 function clampDay(day) {
@@ -624,6 +761,14 @@ function money(n) {
   }).format(n);
 }
 
+function displayMoney(n) {
+  return isPrivacyOn() ? "🤑🤑🤑" : money(n);
+}
+
+function displayName(name) {
+  return isPrivacyOn() ? "🤑🤑🤑🤑🤑" : name;
+}
+
 function daysWord(n) {
   const abs = Math.abs(n) % 100;
   const last = abs % 10;
@@ -631,6 +776,59 @@ function daysWord(n) {
   if (last === 1) return "день";
   if (last >= 2 && last <= 4) return "дні";
   return "днів";
+}
+
+function hoursWord(n) {
+  const abs = Math.abs(n) % 100;
+  const last = abs % 10;
+  if (abs > 10 && abs < 20) return "годин";
+  if (last === 1) return "година";
+  if (last >= 2 && last <= 4) return "години";
+  return "годин";
+}
+
+function hoursUntilDayEnd(now = new Date()) {
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), DAY_END_HOUR, 0, 0, 0);
+  const ms = end - now;
+  if (ms <= 0) return 0;
+  return Math.ceil(ms / 3600000);
+}
+
+function workdayBounds(now = new Date()) {
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), DAY_START_HOUR, 0, 0, 0);
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), DAY_END_HOUR, 0, 0, 0);
+  return { start, end, totalMs: end - start };
+}
+
+function computeEarnedSoFar(dailyAmount, now = new Date()) {
+  const weekday = now.getDay();
+  if (weekday === 0 || weekday === 6) return 0;
+
+  const { start, end, totalMs } = workdayBounds(now);
+  if (totalMs <= 0) return 0;
+  if (now <= start) return 0;
+  if (now >= end) return dailyAmount;
+
+  const elapsed = now - start;
+  return dailyAmount * (elapsed / totalMs);
+}
+
+function updateDayEndLine(now = new Date()) {
+  if (!els.dayEndLine) return;
+  const hours = hoursUntilDayEnd(now);
+  if (hours <= 0) {
+    els.dayEndLine.textContent = "День до 18:00 закінчився";
+    return;
+  }
+  els.dayEndLine.innerHTML = `До кінця дня<br>18:00 · ${hours} ${hoursWord(hours)}`;
+}
+
+function updateEarnedSoFar(dailyAmount, now = new Date()) {
+  if (!els.earnedSoFar) return;
+  const earned = computeEarnedSoFar(dailyAmount, now);
+  const workHours = DAY_END_HOUR - DAY_START_HOUR;
+  const hourly = dailyAmount / workHours;
+  els.earnedSoFar.innerHTML = `Зароблено<br>${displayMoney(earned)}<br><span class="earned-rate">${displayMoney(hourly)}/год</span>`;
 }
 
 function computeJar(sources, now = new Date()) {
@@ -733,7 +931,10 @@ function render() {
     els.monthLine.textContent = `${name.charAt(0).toUpperCase()}${name.slice(1)} ${now.getFullYear()}`;
   }
 
-  els.jarAmount.textContent = money(total);
+  els.jarAmount.textContent = displayMoney(total);
+  if (els.jarMonthTotal) {
+    els.jarMonthTotal.textContent = `За місяць: ${displayMoney(monthTotal)}`;
+  }
   els.jarFill.style.height = `${fillPct}%`;
   els.jarAmount.classList.remove("bump");
   void els.jarAmount.offsetWidth;
@@ -742,31 +943,34 @@ function render() {
   if (els.todayLine) {
     els.todayLine.textContent =
       sources.length === 0
-        ? "За сьогодні: $0"
-        : `За сьогодні: ${money(todayEarned)} · ${workDays} роб. дн.`;
+        ? `За сьогодні: ${displayMoney(0)}`
+        : `За сьогодні: ${displayMoney(todayEarned)} · ${workDays} роб. дн.`;
   }
+
+  updateDayEndLine(now);
+  updateEarnedSoFar(todayEarned, now);
 
   if (!next) {
     els.nextLine.textContent = "Додайте джерело доходу";
   } else if (next.daysUntil === 0) {
-    els.nextLine.innerHTML = `Сьогодні: <strong>${escapeHtml(next.source.name)}</strong> · ${money(next.source.amount)}`;
+    els.nextLine.innerHTML = `Сьогодні: <strong>${escapeHtml(displayName(next.source.name))}</strong> · ${displayMoney(next.source.amount)}`;
   } else {
-    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${escapeHtml(next.source.name)} · ${money(next.source.amount)}`;
+    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${escapeHtml(displayName(next.source.name))} · ${displayMoney(next.source.amount)}`;
   }
 
   els.emptyState.hidden = sources.length > 0;
   els.sourceList.innerHTML = sources
     .map((source) => {
       const paid = paidIds.has(source.id);
-      const daily = source.amount / workDays;
+      const shownName = displayName(source.name);
       return `
         <li class="source-item${paid ? " paid" : ""}" data-id="${source.id}">
-          <div class="source-name">${escapeHtml(source.name)}</div>
-          <div class="source-amount">${money(source.amount)}</div>
-          <div class="source-meta">${source.day} число${paid ? " · у кишені" : " · очікується"} · ${money(daily)}/день</div>
+          <div class="source-name">${escapeHtml(shownName)}</div>
+          <div class="source-amount">${displayMoney(source.amount)}</div>
+          <div class="source-meta">${source.day} число${paid ? " · у кишені" : " · очікується"}</div>
           <div class="source-actions">
-            <button type="button" class="btn-icon edit" data-action="edit" aria-label="Редагувати ${escapeHtml(source.name)}">Редагувати</button>
-            <button type="button" class="btn-icon delete" data-action="delete" aria-label="Видалити ${escapeHtml(source.name)}">Видалити</button>
+            <button type="button" class="btn-icon edit" data-action="edit" aria-label="Редагувати">Редагувати</button>
+            <button type="button" class="btn-icon delete" data-action="delete" aria-label="Видалити">Видалити</button>
           </div>
         </li>
       `;
@@ -788,6 +992,10 @@ els.toggleForm.addEventListener("click", () => {
 
 els.cancelForm.addEventListener("click", () => {
   setFormOpen(false);
+});
+
+els.privacyBtn?.addEventListener("click", () => {
+  setPrivacy(!isPrivacyOn());
 });
 
 els.form.addEventListener("submit", (event) => {
@@ -839,9 +1047,15 @@ els.sourceList.addEventListener("click", (event) => {
   }
 });
 
+setPrivacy(isPrivacyOn());
 render();
 setInterval(spawnDrop, 1000);
 spawnDrop();
+setInterval(() => {
+  const now = new Date();
+  updateDayEndLine(now);
+  updateEarnedSoFar(computeTodayEarned(loadSources(), now), now);
+}, 60000);
 
 const installHint = document.getElementById("install-hint");
 
@@ -855,5 +1069,5 @@ function setHint(text, ok = false) {
 setHint("Файл працює офлайн. Збережіть у Файли та «На екран Дому».", true);
 
 </script>
-</body>
+  </body>
 </html>
