@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -9,53 +9,56 @@
     <meta name="theme-color" content="#0f2e28" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Coin Pocket" />
+    <meta name="apple-mobile-web-app-title" content="Кишеня" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="stylesheet" href="styles.css" />
-    <title>Coin Pocket</title>
+    <title>Кишеня</title>
   </head>
   <body>
     <div class="atmosphere" aria-hidden="true"></div>
     <main class="app">
       <header class="brand">
-        <p class="brand-name">Coin Pocket</p>
+        <p class="brand-name">Кишеня</p>
+        <p class="month-line" id="month-line"></p>
         <p class="install-hint" id="install-hint" hidden></p>
       </header>
 
       <section class="jar" aria-live="polite">
-        <p class="jar-label">In the jar this month</p>
+        <p class="jar-label">У кишені цього місяця</p>
         <p class="jar-amount" id="jar-amount">$0</p>
-        <div class="jar-visual" aria-hidden="true">
+        <div class="jar-stage" aria-hidden="true">
+          <div class="drops" id="drops"></div>
           <div class="jar-glass">
             <div class="jar-fill" id="jar-fill"></div>
           </div>
         </div>
-        <p class="next-line" id="next-line">Add a money source to begin</p>
+        <p class="today-line" id="today-line">За сьогодні: $0</p>
+        <p class="next-line" id="next-line">Додайте джерело доходу</p>
       </section>
 
       <section class="sources" aria-labelledby="sources-heading">
         <div class="section-head">
-          <h2 id="sources-heading">Sources</h2>
-          <button type="button" class="btn-text" id="toggle-form">Add</button>
+          <h2 id="sources-heading">Джерела</h2>
+          <button type="button" class="btn-text" id="toggle-form">Додати</button>
         </div>
 
         <form class="source-form" id="source-form" hidden>
           <label>
-            Name
+            Назва
             <input
               type="text"
               name="name"
               id="source-name"
-              placeholder="Salary"
+              placeholder="Зарплата"
               required
               autocomplete="off"
             />
           </label>
           <div class="form-row">
             <label>
-              Amount
+              Сума
               <input
                 type="number"
                 name="amount"
@@ -68,7 +71,7 @@
               />
             </label>
             <label>
-              Day
+              День
               <input
                 type="number"
                 name="day"
@@ -83,13 +86,13 @@
           </div>
           <input type="hidden" id="source-id" value="" />
           <div class="form-actions">
-            <button type="button" class="btn-ghost" id="cancel-form">Cancel</button>
-            <button type="submit" class="btn-primary" id="save-source">Save</button>
+            <button type="button" class="btn-ghost" id="cancel-form">Скасувати</button>
+            <button type="submit" class="btn-primary" id="save-source">Зберегти</button>
           </div>
         </form>
 
         <ul class="source-list" id="source-list"></ul>
-        <p class="empty" id="empty-state">No sources yet. Tap Add to create one.</p>
+        <p class="empty" id="empty-state">Ще немає джерел. Натисніть «Додати».</p>
       </section>
     </main>
     <script src="app.js"></script>

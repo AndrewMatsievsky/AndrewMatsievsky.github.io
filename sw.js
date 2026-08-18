@@ -1,4 +1,4 @@
-const CACHE = "coin-pocket-v3";
+const CACHE = "kyshenya-v7";
 const ASSETS = [
   "./",
   "./index.html",

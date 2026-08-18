@@ -1,5 +1,20 @@
 const STORAGE_KEY = "coin-pocket-sources-v1";
 
+const MONTHS_UK = [
+  "січень",
+  "лютий",
+  "березень",
+  "квітень",
+  "травень",
+  "червень",
+  "липень",
+  "серпень",
+  "вересень",
+  "жовтень",
+  "листопад",
+  "грудень",
+];
+
 function uuid() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
@@ -18,6 +33,9 @@ const els = {
   jarAmount: document.getElementById("jar-amount"),
   jarFill: document.getElementById("jar-fill"),
   nextLine: document.getElementById("next-line"),
+  todayLine: document.getElementById("today-line"),
+  monthLine: document.getElementById("month-line"),
+  drops: document.getElementById("drops"),
   sourceList: document.getElementById("source-list"),
   emptyState: document.getElementById("empty-state"),
   form: document.getElementById("source-form"),
@@ -61,6 +79,16 @@ function daysInMonth(year, monthIndex) {
   return new Date(year, monthIndex + 1, 0).getDate();
 }
 
+function workingDaysInMonth(year, monthIndex) {
+  const total = daysInMonth(year, monthIndex);
+  let count = 0;
+  for (let day = 1; day <= total; day += 1) {
+    const weekday = new Date(year, monthIndex, day).getDay();
+    if (weekday !== 0 && weekday !== 6) count += 1;
+  }
+  return Math.max(1, count);
+}
+
 function effectivePayday(year, monthIndex, day) {
   return Math.min(clampDay(day), daysInMonth(year, monthIndex));
 }
@@ -70,26 +98,20 @@ function startOfDay(date) {
 }
 
 function money(n) {
-  return new Intl.NumberFormat(undefined, {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    maximumFractionDigits: n % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: Math.abs(n % 1) < 1e-9 ? 0 : 2,
   }).format(n);
 }
 
-function ordinal(n) {
-  const v = n % 100;
-  if (v >= 11 && v <= 13) return `${n}th`;
-  switch (n % 10) {
-    case 1:
-      return `${n}st`;
-    case 2:
-      return `${n}nd`;
-    case 3:
-      return `${n}rd`;
-    default:
-      return `${n}th`;
-  }
+function daysWord(n) {
+  const abs = Math.abs(n) % 100;
+  const last = abs % 10;
+  if (abs > 10 && abs < 20) return "днів";
+  if (last === 1) return "день";
+  if (last >= 2 && last <= 4) return "дні";
+  return "днів";
 }
 
 function computeJar(sources, now = new Date()) {
@@ -108,6 +130,11 @@ function computeJar(sources, now = new Date()) {
   }
 
   return { total, paidIds };
+}
+
+function computeTodayEarned(sources, now = new Date()) {
+  const workDays = workingDaysInMonth(now.getFullYear(), now.getMonth());
+  return sources.reduce((sum, source) => sum + source.amount / workDays, 0);
 }
 
 function computeNext(sources, now = new Date()) {
@@ -141,11 +168,11 @@ function computeNext(sources, now = new Date()) {
 
 function setFormOpen(open, editing = null) {
   els.form.hidden = !open;
-  els.toggleForm.textContent = open ? "Close" : "Add";
+  els.toggleForm.textContent = open ? "Закрити" : "Додати";
   if (!open) {
     els.form.reset();
     els.id.value = "";
-    els.save.textContent = "Save";
+    els.save.textContent = "Зберегти";
     return;
   }
   if (editing) {
@@ -153,22 +180,39 @@ function setFormOpen(open, editing = null) {
     els.name.value = editing.name;
     els.amount.value = String(editing.amount);
     els.day.value = String(editing.day);
-    els.save.textContent = "Update";
+    els.save.textContent = "Оновити";
     els.name.focus();
   } else {
     els.id.value = "";
-    els.save.textContent = "Save";
+    els.save.textContent = "Зберегти";
     els.name.focus();
   }
 }
 
+function spawnDrop() {
+  if (!els.drops) return;
+  const drop = document.createElement("span");
+  drop.className = "coin-drop";
+  drop.style.left = `${18 + Math.random() * 64}%`;
+  drop.style.animationDuration = `${0.85 + Math.random() * 0.45}s`;
+  els.drops.appendChild(drop);
+  drop.addEventListener("animationend", () => drop.remove());
+}
+
 function render() {
-  const sources = loadSources().sort((a, b) => a.day - b.day || a.name.localeCompare(b.name));
+  const sources = loadSources().sort((a, b) => a.day - b.day || a.name.localeCompare(b.name, "uk"));
   const now = new Date();
   const { total, paidIds } = computeJar(sources, now);
   const next = computeNext(sources, now);
+  const todayEarned = computeTodayEarned(sources, now);
+  const workDays = workingDaysInMonth(now.getFullYear(), now.getMonth());
   const monthTotal = sources.reduce((sum, s) => sum + s.amount, 0);
   const fillPct = monthTotal > 0 ? Math.min(100, Math.round((total / monthTotal) * 100)) : 0;
+
+  if (els.monthLine) {
+    const name = MONTHS_UK[now.getMonth()];
+    els.monthLine.textContent = `${name.charAt(0).toUpperCase()}${name.slice(1)} ${now.getFullYear()}`;
+  }
 
   els.jarAmount.textContent = money(total);
   els.jarFill.style.height = `${fillPct}%`;
@@ -176,28 +220,34 @@ function render() {
   void els.jarAmount.offsetWidth;
   els.jarAmount.classList.add("bump");
 
+  if (els.todayLine) {
+    els.todayLine.textContent =
+      sources.length === 0
+        ? "За сьогодні: $0"
+        : `За сьогодні: ${money(todayEarned)} · ${workDays} роб. дн.`;
+  }
+
   if (!next) {
-    els.nextLine.textContent = "Add a money source to begin";
+    els.nextLine.textContent = "Додайте джерело доходу";
   } else if (next.daysUntil === 0) {
-    els.nextLine.innerHTML = `Today: <strong>${escapeHtml(next.source.name)}</strong> · ${money(next.source.amount)}`;
-  } else if (next.daysUntil === 1) {
-    els.nextLine.innerHTML = `Next in <strong>1 day</strong> · ${escapeHtml(next.source.name)} · ${money(next.source.amount)}`;
+    els.nextLine.innerHTML = `Сьогодні: <strong>${escapeHtml(next.source.name)}</strong> · ${money(next.source.amount)}`;
   } else {
-    els.nextLine.innerHTML = `Next in <strong>${next.daysUntil} days</strong> · ${escapeHtml(next.source.name)} · ${money(next.source.amount)}`;
+    els.nextLine.innerHTML = `Наступна через <strong>${next.daysUntil} ${daysWord(next.daysUntil)}</strong> · ${escapeHtml(next.source.name)} · ${money(next.source.amount)}`;
   }
 
   els.emptyState.hidden = sources.length > 0;
   els.sourceList.innerHTML = sources
     .map((source) => {
       const paid = paidIds.has(source.id);
+      const daily = source.amount / workDays;
       return `
         <li class="source-item${paid ? " paid" : ""}" data-id="${source.id}">
           <div class="source-name">${escapeHtml(source.name)}</div>
           <div class="source-amount">${money(source.amount)}</div>
-          <div class="source-meta">Day ${ordinal(source.day)}${paid ? "" : " · upcoming"}</div>
+          <div class="source-meta">${source.day} число${paid ? " · у кишені" : " · очікується"} · ${money(daily)}/день</div>
           <div class="source-actions">
-            <button type="button" class="btn-icon edit" data-action="edit" aria-label="Edit ${escapeHtml(source.name)}">Edit</button>
-            <button type="button" class="btn-icon delete" data-action="delete" aria-label="Delete ${escapeHtml(source.name)}">Del</button>
+            <button type="button" class="btn-icon edit" data-action="edit" aria-label="Редагувати ${escapeHtml(source.name)}">Редагувати</button>
+            <button type="button" class="btn-icon delete" data-action="delete" aria-label="Видалити ${escapeHtml(source.name)}">Видалити</button>
           </div>
         </li>
       `;
@@ -271,6 +321,8 @@ els.sourceList.addEventListener("click", (event) => {
 });
 
 render();
+setInterval(spawnDrop, 1000);
+spawnDrop();
 
 const installHint = document.getElementById("install-hint");
 
@@ -282,23 +334,21 @@ function setHint(text, ok = false) {
 }
 
 async function setupOffline() {
-  if (!window.isSecureContext) {
-    return;
-  }
+  if (!window.isSecureContext) return;
   if (!("serviceWorker" in navigator)) {
-    setHint("This browser cannot cache the app for offline use.");
+    setHint("Цей браузер не кешує застосунок офлайн.");
     return;
   }
   try {
     const reg = await navigator.serviceWorker.register("./sw.js");
     await navigator.serviceWorker.ready;
     if (reg.active || navigator.serviceWorker.controller) {
-      setHint("Ready offline — you can close the server.", true);
+      setHint("Готово офлайн — сервер можна вимкнути.", true);
     } else {
-      setHint("Caching… reopen the app once after install.", true);
+      setHint("Кешування… відкрийте ще раз після встановлення.", true);
     }
   } catch {
-    setHint("Could not enable offline mode. Try reloading over HTTPS.");
+    setHint("Не вдалося увімкнути офлайн. Спробуйте через HTTPS.");
   }
 }
 
