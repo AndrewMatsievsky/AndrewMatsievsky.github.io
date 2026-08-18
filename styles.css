@@ -73,11 +73,40 @@ body {
 }
 
 .privacy-font {
+  display: inline-block;
+  vertical-align: middle;
   font-family: "Apple Braille", "Segoe UI Symbol", "Noto Sans Symbols", "DejaVu Sans", monospace;
   font-style: normal;
   font-weight: 400;
+  font-size: 0.95em;
+  line-height: 1;
   letter-spacing: 0.18em;
+  margin-inline-end: -0.18em;
+  text-align: center;
   speak: never;
+}
+
+.jar-amount .privacy-font,
+.jar-month-total .privacy-font,
+.today-line .privacy-font,
+.next-line .privacy-font,
+.source-name .privacy-font,
+.source-amount .privacy-font,
+.earned-so-far .privacy-font {
+  vertical-align: middle;
+  position: relative;
+  top: 0;
+}
+
+.jar-month-total,
+.today-line,
+.next-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  text-align: center;
 }
 
 .jar-row {
@@ -113,7 +142,7 @@ body {
   color: var(--leaf-bright);
   font-size: 0.75rem;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .earned-so-far .earned-rate {
@@ -474,6 +503,11 @@ body {
   font-weight: 500;
   color: var(--coin-soft);
   text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  line-height: 1;
+  min-height: 1.2em;
 }
 
 .source-actions {
