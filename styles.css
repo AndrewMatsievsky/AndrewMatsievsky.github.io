@@ -75,13 +75,11 @@ body {
 .privacy-font {
   display: inline-block;
   vertical-align: middle;
-  font-family: "Apple Braille", "Segoe UI Symbol", "Noto Sans Symbols", "DejaVu Sans", monospace;
   font-style: normal;
   font-weight: 400;
   font-size: 0.95em;
   line-height: 1;
-  letter-spacing: 0.18em;
-  margin-inline-end: -0.18em;
+  letter-spacing: 0.02em;
   text-align: center;
   speak: never;
 }
@@ -257,13 +255,16 @@ body {
 
 .coin-drop {
   position: absolute;
-  top: -12px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff6c8, var(--coin) 55%, #b8862d);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  top: -14px;
+  width: auto;
+  height: auto;
+  font-size: 28px;
+  line-height: 1;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
   animation: pour linear forwards;
+  pointer-events: none;
 }
 
 @keyframes pour {

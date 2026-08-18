@@ -130,12 +130,12 @@ function money(n, digits) {
 
 function displayMoney(n, digits) {
   if (!isPrivacyOn()) return money(n, digits);
-  return '<span class="privacy-font" aria-hidden="true">⠿⠿⠿</span>';
+  return '<span class="privacy-font" aria-hidden="true">💵💵💵</span>';
 }
 
 function displayName(name) {
   if (!isPrivacyOn()) return escapeHtml(name);
-  return '<span class="privacy-font" aria-hidden="true">⠿⠿⠿⠿⠿</span>';
+  return '<span class="privacy-font" aria-hidden="true">💵💵💵💵💵</span>';
 }
 
 function daysWord(n) {
@@ -279,6 +279,7 @@ function spawnDrop() {
   if (!els.drops) return;
   const drop = document.createElement("span");
   drop.className = "coin-drop";
+  drop.textContent = "💵";
   drop.style.left = `${18 + Math.random() * 64}%`;
   drop.style.animationDuration = `${0.85 + Math.random() * 0.45}s`;
   els.drops.appendChild(drop);
