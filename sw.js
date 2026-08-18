@@ -1,4 +1,4 @@
-const CACHE = "kyshenya-v33";
+const CACHE = "kyshenya-v39";
 const ASSETS = [
   "./",
   "./index.html",

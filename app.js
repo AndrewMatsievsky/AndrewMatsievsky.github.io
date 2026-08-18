@@ -36,6 +36,7 @@ const els = {
   jarAmount: document.getElementById("jar-amount"),
   jarMonthTotal: document.getElementById("jar-month-total"),
   jarFill: document.getElementById("jar-fill"),
+  jarStage: document.getElementById("jar-stage"),
   nextLine: document.getElementById("next-line"),
   todayLine: document.getElementById("today-line"),
   dayEndLine: document.getElementById("day-end-line"),
@@ -275,6 +276,19 @@ function setFormOpen(open, editing = null) {
   }
 }
 
+function splashJar() {
+  if (!els.jarFill) return;
+  els.jarFill.classList.remove("is-waving");
+  els.jarStage?.classList.remove("is-waving");
+  void els.jarFill.offsetWidth;
+  els.jarFill.classList.add("is-waving");
+  els.jarStage?.classList.add("is-waving");
+  window.setTimeout(() => {
+    els.jarFill?.classList.remove("is-waving");
+    els.jarStage?.classList.remove("is-waving");
+  }, 900);
+}
+
 function spawnDrop() {
   if (!els.drops) return;
   const drop = document.createElement("span");
@@ -434,6 +448,17 @@ els.cancelForm.addEventListener("click", () => {
 
 els.privacyBtn?.addEventListener("click", () => {
   setPrivacy(!isPrivacyOn());
+});
+
+els.jarStage?.addEventListener("click", () => {
+  splashJar();
+});
+
+els.jarStage?.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    splashJar();
+  }
 });
 
 els.form.addEventListener("submit", (event) => {
